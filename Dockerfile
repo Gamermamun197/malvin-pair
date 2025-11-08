@@ -1,21 +1,15 @@
-FROM node:lts-buster
+FROM node:18
 
+# Install dependencies safely
 RUN apt-get update && \
-  apt-get install -y \
-  ffmpeg \
-  imagemagick \
-  webp && \
-  apt-get upgrade -y && \
-  rm -rf /var/lib/apt/lists/*
-  
-WORKDIR /usr/src/app
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    ffmpeg \
+    imagemagick \
+    webp && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY package.json .
-
-RUN npm install && npm install -g qrcode-terminal pm2
-
+# Continue your setup
+WORKDIR /app
 COPY . .
-
-EXPOSE 5000
-
+RUN npm install
 CMD ["npm", "start"]
